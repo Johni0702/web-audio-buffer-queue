@@ -36,7 +36,7 @@ class BufferQueueNode extends Writable {
    * @param {number} [options.bufferSize=0] - Buffer size, must be a power of two
    *    between 256 and 16284. May also be 0 in which case the implementation will
    *    pick a good value (recommanded).
-   * @param {AudioContext} [options.audioContext=require('audio-context')] - The audio context
+   * @param {AudioContext} [options.audioContext=require('audio-context')()] - The audio context
    */
   constructor (options) {
     super(options)
@@ -46,9 +46,11 @@ class BufferQueueNode extends Writable {
       objectMode: false,
       interleaved: true,
       channels: 1,
-      bufferSize: 0,
-      audioContext: globalAudioContext
+      bufferSize: 0
     }, options)
+    if (!options.audioContext) {
+      options.audioContext = globalAudioContext()
+    }
     this._dataType = options.dataType
     this._objectMode = options.objectMode
     this._interleaved = options.interleaved
